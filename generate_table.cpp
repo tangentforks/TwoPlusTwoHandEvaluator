@@ -11,6 +11,17 @@
 
 const char HandRanks[][16] = {"BAD!!","High Card","Pair","Two Pair","Three of a Kind","Straight","Flush","Full House","Four of a Kind","Straight Flush"};
 
+#define __int64 int64_t
+#define LARGE_INTEGER int64_t
+
+inline
+int __min(int const x, int const y)
+{
+  return y < x ? y : x;
+}
+
+
+
 __int64 IDs[612978];
 int HR[32487834];   
 
@@ -262,7 +273,7 @@ int DoEval(__int64 IDin)
 }
 
 
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
 	int IDslot, card = 0, count = 0;
 	__int64 ID;
@@ -351,7 +362,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	int c0, c1, c2, c3, c4, c5, c6;
 	int u0, u1, u2, u3, u4, u5;
 
-	QueryPerformanceCounter(&timings);				    // start High Precision clock
+	//	QueryPerformanceCounter(&timings);				    // start High Precision clock
 
 	for (c0 = 1; c0 < 53; c0++) {
 		u0 = HR[53+c0];
@@ -376,7 +387,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 	}
 
-	QueryPerformanceCounter(&endtimings);	  // end the high precision clock
+	//	QueryPerformanceCounter(&endtimings);	  // end the high precision clock
 
 	timer = clock() - timer;  // get the time in this
 
@@ -385,10 +396,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printf("\nTotal Hands = %d\n", count);
 
-	__int64 clocksused = (__int64)endtimings.QuadPart - (__int64) timings.QuadPart;  // calc clocks used from the High Precision clock
+	//	__int64 clocksused = (__int64)endtimings.QuadPart - (__int64) //timings.QuadPart;  // calc clocks used from the High Precision clock
 
 	// and display the clock results
-	printf("\nValidation seconds = %.4lf\nTotal HighPrecision Clocks = %I64d\nHighPrecision clocks per lookup = %lf\n", (double)timer/CLOCKS_PER_SEC, clocksused, (double) clocksused /  133784560.0) ;
+	//	printf("\nValidation seconds = %.4lf\nTotal HighPrecision Clocks = %I64d\nHighPrecision clocks per lookup = %lf\n", (double)timer/CLOCKS_PER_SEC, clocksused, (double) clocksused /  133784560.0) ;
 
 	// output the array now that I have it!!
 	FILE * fout = fopen("HandRanks.dat", "wb");

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 #define	STRAIGHT_FLUSH	1
 #define	FOUR_OF_A_KIND	2
@@ -12,7 +13,7 @@
 
 #define	RANK(x)		((x >> 8) & 0xF)
 
-static char *value_str[] = {
+static std::string value_str[] = {
 	"",
 	"Straight Flush",
 	"Four of a Kind",
