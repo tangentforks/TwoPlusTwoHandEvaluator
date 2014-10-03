@@ -17,6 +17,6 @@ With all the people who had touched the c and c++ code, I found it difficult to 
 
 * License
 
-Wotton's code contains the self-contradictory statement "My code is GPL, use it as you like". The Cactus Kev / Paul Senzee code has a copyright but no license.
+The pascal program is my own, and available for use under the extremely liberal *zlib license*. I wrote the pascal program from scratch and it has no dependencies on or relation to any of the C/C++ code. The only requirement is the generated database file.
 
-The pascal program is my own, and available for use under the extremely liberal zlib license. I wrote the pascal program from scratch and it has no dependencies on or relation to any of the C/C++ code. The only requirement is the generated database file.
+Wotton's code contains the self-contradictory statement "My code is GPL, use it as you like". The Cactus Kev / Paul Senzee code has a copyright but no license.
