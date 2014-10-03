@@ -27,12 +27,21 @@
 #include <time.h>
 
 const char HandRanks[][16] = {
-  "BAD!!","High Card","Pair","Two Pair","Three of a Kind",
-  "Straight","Flush","Full House","Four of a Kind",
-  "Straight Flush" };
+  "BAD!!",//0
+  "High Card",//1
+  "Pair",//2
+  "Two Pair",//3
+  "Three of a Kind",//4
+  "Straight",//5
+  "Flush",//6
+  "Full House",//7
+  "Four of a Kind",//8
+  "Straight Flush"//9
+ };
 
 #define LARGE_INTEGER int64_t
 #define int64 int64_t
+
 
 inline int min(int const x, int const y) {
   return y < x ? y : x;
@@ -48,6 +57,7 @@ int64 maxID = 0;
 
 
 int64 MakeID(int64 IDin, int newcard) {
+  // returns a 64-bit hand ID, for up to 8 cards, stored 1 per byte.
 
   int64 ID = 0;
   int suitcount[4 + 1];
@@ -69,7 +79,7 @@ int64 MakeID(int64 IDin, int newcard) {
   // my cards are 2c = 1, 2d = 2  ... As = 52
   newcard--;  // make 0 based!
 
-  // add next card formats card to rrrr00ss
+  // add next card. formats card to rrrr00ss
   wk[0] = (((newcard >> 2) + 1) << 4) + (newcard & 3) + 1;
 
   for (numcards = 0; wk[numcards]; numcards++) {
@@ -86,6 +96,7 @@ int64 MakeID(int64 IDin, int newcard) {
   if (getout) return 0; // duplicated another card (ignore this one)
 
 // (MakeID)
+
   // for suit to be significant, need to have n-2 of same suit
   int needsuited = numcards - 2;
   if (numcards > 4) {
@@ -113,6 +124,7 @@ int64 MakeID(int64 IDin, int newcard) {
   }
 
 // (MakeID)
+
   // Sort Using XOR.  Netwk for N=7, using Bose-Nelson Algorithm:
   // Thanks to the thread!
 #define SWAP(I,J) {if (wk[I] < wk[J]) {wk[I]^=wk[J]; wk[J]^=wk[I]; wk[I]^=wk[J];}}
@@ -136,6 +148,8 @@ int64 MakeID(int64 IDin, int newcard) {
 }
 
 int SaveID(int64 ID) {
+  // this inserts a hand ID into the IDs array.
+
   if (ID == 0) return 0; // don't use up a record for a 0!
 
   // take care of the most likely first goes on the end...
@@ -147,7 +161,7 @@ int SaveID(int64 ID) {
     return numIDs - 1;
   }
 
-  // find the slot I will find it (by a pseudo bsearch algorithm)
+  // find the slot (by a pseudo bsearch algorithm)
   int low = 0;
   int high = numIDs - 1;
   int64 testval;
@@ -171,6 +185,8 @@ int SaveID(int64 ID) {
 
 
 int DoEval(int64 IDin) {
+  // converts a 64bit handID to an absolute ranking.
+
   // I guess I have some explaining to do here...
   // I used the Cactus Kevs Eval ref http://www.suffecool.net/poker/evaluator.html
   // I Love the pokersource for speed, but I needed to do some tweaking
@@ -209,6 +225,7 @@ int DoEval(int64 IDin) {
     }
 
 // (DoEval)
+
     for (cardnum = 0; cardnum < numevalcards; cardnum++) {
       // just have numcards...
       wkcard = holdcards[cardnum];
@@ -284,7 +301,7 @@ int DoEval(int64 IDin) {
     else if (result < 7141) result = result - 5863 + 4096 * 6;  // 1277 flushes
     else if (result < 7297) result = result - 7140 + 4096 * 7;  //  156 full house
     else if (result < 7453) result = result - 7296 + 4096 * 8;  //  156 four-kind
-    else                      result = result - 7452 + 4096 * 9;  //   10 straight-flushes
+    else                    result = result - 7452 + 4096 * 9;  //   10 str.flushes
   }
   return result;  // now a handrank that I like
 }
@@ -314,6 +331,7 @@ int main(int argc, char* argv[]) {
   int holdid;
 
 // main()
+
   printf("\nGetting Card IDs!\n");
 
   // Jmd: Okay, this loop is going to fill up the IDs[] array which has
