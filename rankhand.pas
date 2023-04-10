@@ -35,93 +35,91 @@ uses sysutils;
 type
   THandVal  = UInt32;
   THandDb   = array[0..32487833] of THandVal;
-  TRank	    = (r2,r3,r4,r5,r6,r7,r8,r9,rT,rJ,rQ,rK,rA);
-  TSuit	    = (sC,sD,sH,sS);
+  TRank     = (r2,r3,r4,r5,r6,r7,r8,r9,rT,rJ,rQ,rK,rA);
+  TSuit     = (sC,sD,sH,sS);
   TCardNum  = 0..53;
-  TDeck	    = array[TCardNum] of UInt32;
+  TDeck     = array[TCardNum] of UInt32;
   TCardCode = UInt32;
   TCodes    = array of TCardCode;
   TCardNums = array of TCardNum;
   TEqClass  = (eqUnknown{0}, eqHighCard{1}, eqPair{2}, eqTwoPair{3},
-	       eqTrips{4}, eqStraight{5}, eqFlush{6}, eqFullHouse{7},
-	       eqQuads{8}, eqStraightFlush{9});
+               eqTrips{4}, eqStraight{5}, eqFlush{6}, eqFullHouse{7},
+               eqQuads{8}, eqStraightFlush{9});
 
 const
   kPrimes  : array[TRank] of UInt32 = (2,3,5,7,11,13,17,19,23,29,31,37,41);
   kSuitBit : array[TSuit] of UInt32 = ($8000,$4000,$2000,$1000);
-  kRank	   : array[TRank] of char   = ('2','3','4','5','6','7',
-				       '8','9','T','J','Q','K','A');
-  kSuit	   : array[TSuit] of char   = ('c','d','h','s');
+  kRank    : array[TRank] of char   = ('2','3','4','5','6','7',
+                                       '8','9','T','J','Q','K','A');
+  kSuit    : array[TSuit] of char   = ('c','d','h','s');
 
 var
-  gDeck	: TDeck;
+  gDeck : TDeck;
 
 
 function cnum2rank(c:TCardNum):TRank;
-  begin result := TRank((c-1) div 4)
-  end;
+begin result := TRank((c-1) div 4)
+end;
 
 function cnum2suit(c:TCardNum):TSuit;
-  begin result := TSuit((c-1) mod 4)
-  end;
+begin result := TSuit((c-1) mod 4)
+end;
 
 function cnum2str(c:TCardNum):string;
-  begin result := kRank[cnum2rank(c)] + kSuit[cnum2suit(c)]
-  end;
+begin result := kRank[cnum2rank(c)] + kSuit[cnum2suit(c)]
+end;
 
 function code2rank(c:TCardCode):TRank;
-  begin result := TRank($0000f and (c shr 8)-1)
-  end;
+begin result := TRank($0000f and (c shr 8)-1)
+end;
 
 function code2suit(c:TCardCode):TSuit;
-  begin
-    for result in TSuit do
-      if (c and kSuitBit[result])<>0 then
-	exit;
-  end;
+begin
+  for result in TSuit do
+    if (c and kSuitBit[result])<>0 then exit;
+end;
 
 function code2str(c:TCardCode):string;
-  begin result := kRank[code2rank(c)] + kSuit[code2suit(c)]
-  end;
+begin result := kRank[code2rank(c)] + kSuit[code2suit(c)]
+end;
 
 function codes2str(codes:TCodes):string;
   var c:TCardCode;
-  begin
-    result := ''; for c in codes do result += code2str(c);
-  end;
+begin
+  result := ''; for c in codes do result += code2str(c);
+end;
 
 
 
 function rs2code(r:TRank; s:TSuit): TCardCode;
   var ri : UInt32;
-  begin
-    ri := UInt32(ord(r))+1;
-    result := kPrimes[r]  or (ri shl 8) or
-	      kSuitBit[s] or (1 shl (16+ri));
-  end;
+begin
+  ri := UInt32(ord(r))+1;
+  result := kPrimes[r]  or (ri shl 8) or
+            kSuitBit[s] or (1 shl (16+ri));
+end;
 
 
 procedure init_deck(var deck : TDeck);
   var n:UInt32=1; s:TSuit; r:TRank;
-  begin
-    for r in TRank do 
-      for s in TSuit do begin
-	deck[n] := rs2code(r,s);
-	writeln(': ', n:2, ' = "', cnum2str(n), '" : ',
-		deck[n]:8, ' = "', code2str(deck[n]),'"');
-	inc(n);
-      end;
+begin
+  for r in TRank do for s in TSuit do begin
+    deck[n] := rs2code(r,s);
+    //writeln(': ', n:2, ' = "', cnum2str(n), '" : ',
+    //        deck[n]:8, ' = "', code2str(deck[n]),'"');
+    inc(n);
   end;
+end;
 
 function rs2CNum(deck:TDeck; rank:TRank; suit:TSuit):TCardNum;
   var i : UInt32; c:TCardCode;
-  begin
-    i := 1; result := 0; c := rs2code(rank,suit);
-    while (i <= high(deck)) and (result = 0) do
-      begin if deck[i] = c then result := i;
-	inc(i);
-      end;
+begin
+  i := 1; result := 0; c := rs2code(rank,suit);
+  while (i <= high(deck)) and (result = 0) do begin
+    if deck[i] = c then result := i;
+    inc(i);
   end;
+end;
 
 
 function strToCardNums(hand:string):TCardNums;
@@ -134,60 +132,59 @@ function strToCardNums(hand:string):TCardNums;
   begin
     for ch in hand do
       case ch of
-	'A': rank := rA; 'K': rank := rK; 'Q': rank := rQ; 'J': rank := rJ;
-	'T': rank := rT; '9': rank := r9; '8': rank := r8; '7': rank := r7;
-	'6': rank := r6; '5': rank := r5; '4': rank := r4; '3': rank := r3;
-	'2': rank := r2; ' ':;
-	'c': emit(sC); 'd': emit(sD); 'h': emit(sH); 's': emit(sS);
+        'A' : rank := rA; 'K': rank := rK; 'Q': rank := rQ; 'J': rank := rJ;
+        'T' : rank := rT; '9': rank := r9; '8': rank := r8; '7': rank := r7;
+        '6' : rank := r6; '5': rank := r5; '4': rank := r4; '3': rank := r3;
+        '2' : rank := r2; ' ':;
+        'c' : emit(sC); 'd': emit(sD); 'h': emit(sH); 's': emit(sS);
       end;
   end;
 
 
 
 function eqClass(v:THandVal):TEqClass;
-  begin result := TEqClass($0F and byte(v shr 12));
-  end;
+begin result := TEqClass($0F and byte(v shr 12));
+end;
 
 function evalCardNumHand(db:THandDb; cnums:TCardNums):THandVal;
   var cnum : TCardNum; i:byte=0; b:byte;
-  begin
-    result := 53;
-    for cnum in cnums do
-      begin
-	inc(i);
-	write(i:5,': ',cnum2str(cnum),
-	      ' db[', result:9, ' + ', cnum:3, ' ] -> ');
-	result := db[result + cnum];
-	write(result:9);
-	if i = 7 then write(' (', eqClass(result), ')')
-	else if i >= 5 then write(' (', eqClass(db[result]), ')');
-        writeln;
-      end;
-    if length(cnums) in [5,6] then result := db[result];
+begin
+  result := 53;
+  for cnum in cnums do begin
+    inc(i);
+    write(i:5,': ',cnum2str(cnum),
+          ' db[', result:9, ' + ', cnum:3, ' ] -> ');
+    result := db[result + cnum];
+    write(result:9);
+    if i = 7 then write(' (', eqClass(result), ')')
+    else if i >= 5 then write(' (', eqClass(db[result]), ')');
+    writeln;
   end;
+  if length(cnums) in [5,6] then result := db[result];
+end;
 
 function evalHand(db:THandDb; hand:string):THandVal;
-  begin result := evalCardNumHand(db, strToCardNums(hand))
-  end;
+begin result := evalCardNumHand(db, strToCardNums(hand))
+end;
 
 
 procedure writeRank(db:THandDb; hand:string);
   var val : THandVal;
-  begin
-    val := evalHand(db, hand);
-    writeln;
-    writeln(hand : 22, ' | eq: ', eqClass(val), ' #', (val and $0fff));
-    writeln;
-  end;
+begin
+  val := evalHand(db, hand);
+  writeln;
+  writeln(hand : 22, ' | eq: ', eqClass(val), ' #', (val and $0fff));
+  writeln;
+end;
 
 
 var
-  db	 : THandDb;
+  db   : THandDb;
   dbFile : file of UInt32;
-  nRead	 : UInt32;
-  rank	 : Trank; suit:TSuit;
-  cnum	 : TCardNum; v : THandVal;
-  str	 : string;
+  nRead  : UInt32;
+  rank   : Trank; suit:TSuit;
+  cnum   : TCardNum; v : THandVal;
+  str  : string;
 begin
   init_deck(gDeck);
   Assign(dbFile, 'HandRanks.dat'); Reset(dbFile);
@@ -195,8 +192,10 @@ begin
   writeln;
   for rank in Trank do for suit in TSuit do begin
     cnum := rs2CNum(gDeck,rank,suit);
-    writeln('card:', rank,' ',suit,' ', cnum:3,' > ',cnum2str(cnum));
+    write('card:', rank,' ',suit,' ', cnum:3,' > ');
+    writeln(cnum2str(cnum));
   end;
+  writeln('got here');
   writeRank(db, '2c 2d 2h 2s 3c 3d 3h');
   writeln;
   assert(evalHand(db, '2c 2d 2h 2s 3c 3d 3h') = 32769);
