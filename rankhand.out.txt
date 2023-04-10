@@ -1,0 +1,114 @@
+
+card:r2 sC   1 > 2c
+card:r2 sD   2 > 2d
+card:r2 sH   3 > 2h
+card:r2 sS   4 > 2s
+card:r3 sC   5 > 3c
+card:r3 sD   6 > 3d
+card:r3 sH   7 > 3h
+card:r3 sS   8 > 3s
+card:r4 sC   9 > 4c
+card:r4 sD  10 > 4d
+card:r4 sH  11 > 4h
+card:r4 sS  12 > 4s
+card:r5 sC  13 > 5c
+card:r5 sD  14 > 5d
+card:r5 sH  15 > 5h
+card:r5 sS  16 > 5s
+card:r6 sC  17 > 6c
+card:r6 sD  18 > 6d
+card:r6 sH  19 > 6h
+card:r6 sS  20 > 6s
+card:r7 sC  21 > 7c
+card:r7 sD  22 > 7d
+card:r7 sH  23 > 7h
+card:r7 sS  24 > 7s
+card:r8 sC  25 > 8c
+card:r8 sD  26 > 8d
+card:r8 sH  27 > 8h
+card:r8 sS  28 > 8s
+card:r9 sC  29 > 9c
+card:r9 sD  30 > 9d
+card:r9 sH  31 > 9h
+card:r9 sS  32 > 9s
+card:rT sC  33 > Tc
+card:rT sD  34 > Td
+card:rT sH  35 > Th
+card:rT sS  36 > Ts
+card:rJ sC  37 > Jc
+card:rJ sD  38 > Jd
+card:rJ sH  39 > Jh
+card:rJ sS  40 > Js
+card:rQ sC  41 > Qc
+card:rQ sD  42 > Qd
+card:rQ sH  43 > Qh
+card:rQ sS  44 > Qs
+card:rK sC  45 > Kc
+card:rK sD  46 > Kd
+card:rK sH  47 > Kh
+card:rK sS  48 > Ks
+card:rA sC  49 > Ac
+card:rA sD  50 > Ad
+card:rA sH  51 > Ah
+card:rA sS  52 > As
+got here
+    1: 2c db[       53 +   1 ] ->       106
+    2: 2d db[      106 +   2 ] ->      2862
+    3: 2h db[     2862 +   3 ] ->     73140
+    4: 2s db[    73140 +   4 ] ->   1244440
+    5: 3c db[  1244440 +   5 ] ->   5720184 (eqQuads)
+    6: 3d db[  5720184 +   6 ] ->  13808355 (eqQuads)
+    7: 3h db[ 13808355 +   7 ] ->     32769 (eqQuads)
+
+  2c 2d 2h 2s 3c 3d 3h | eq: eqQuads #1
+
+
+    1: 2c db[       53 +   1 ] ->       106
+    2: 3c db[      106 +   5 ] ->      3021
+    3: 4c db[     3021 +   9 ] ->     81090
+    4: 5c db[    81090 +  13 ] ->   1581149
+    5: 6c db[  1581149 +  17 ] ->   6820464 (eqStraightFlush)
+    6: 7c db[  6820464 +  21 ] ->  16594035 (eqStraightFlush)
+    7: 8c db[ 16594035 +  25 ] ->     36868 (eqStraightFlush)
+
+  2c 3c 4c 5c 6c 7c 8c | eq: eqStraightFlush #4
+
+    1: 4c db[       53 +   9 ] ->       530
+    2: 8c db[      530 +  25 ] ->     23797
+    3: Ac db[    23797 +  49 ] ->    571552
+    4: 3d db[   571552 +   6 ] ->   2582160
+    5: Qd db[  2582160 +  42 ] ->   8815490 (eqHighCard)
+    6: 2h db[  8815490 +   3 ] ->  14786523 (eqHighCard)
+    7: 5h db[ 14786523 +  15 ] ->     20481 (eqStraight)
+
+  4c 8c Ac 3d Qd 2h 5h | eq: eqStraight #1
+
+    1: Ts db[       53 +  36 ] ->      1961
+    2: Js db[     1961 +  40 ] ->     66091
+    3: As db[    66091 +  52 ] ->   1211209
+    4: Qs db[  1211209 +  44 ] ->   5687006
+    5: Ks db[  5687006 +  48 ] ->  13794575 (eqStraightFlush)
+
+          TsJs AsQs Ks | eq: eqStraightFlush #10
+
+    1: As db[       53 +  52 ] ->      2809
+    2: Ac db[     2809 +  49 ] ->     72928
+    3: Ad db[    72928 +  50 ] ->   1244281
+    4: Ah db[  1244281 +  51 ] ->   5720131
+    5: 2s db[  5720131 +   4 ] ->   6756334 (eqQuads)
+    6: 2h db[  6756334 +   3 ] ->  14055653 (eqQuads)
+    7: Jc db[ 14055653 +  37 ] ->     32922 (eqQuads)
+
+     AsAc AdAh 2s2h Jc | eq: eqQuads #154
+
+    1: 7s db[       53 +  24 ] ->      1325
+    2: 5d db[     1325 +  14 ] ->     34344
+    3: 4s db[    34344 +  12 ] ->    682004
+    4: 3h db[   682004 +   7 ] ->   2600392
+    5: 2d db[  2600392 +   2 ] ->   6035905 (eqHighCard)
+    6: 2c db[  6035905 +   1 ] ->  13883244 (eqPair)
+    7: 2s db[ 13883244 +   4 ] ->     16393 (eqTrips)
+
+     7s5d 4s3h 2d2c 2s | eq: eqTrips #9
+
+
