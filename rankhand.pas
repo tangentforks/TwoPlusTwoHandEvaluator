@@ -146,8 +146,8 @@ function eqClass(v:THandVal):TEqClass;
 begin result := TEqClass($0F and byte(v shr 12));
 end;
 
-function evalCardNumHand(db:THandDb; cnums:TCardNums):THandVal;
-  var cnum : TCardNum; i:byte=0; b:byte;
+function evalCardNumHand(var db:THandDb; cnums:TCardNums):THandVal;
+  var cnum : TCardNum; i:byte=0;
 begin
   result := 53;
   for cnum in cnums do begin
@@ -163,12 +163,12 @@ begin
   if length(cnums) in [5,6] then result := db[result];
 end;
 
-function evalHand(db:THandDb; hand:string):THandVal;
+function evalHand(var db:THandDb; hand:string):THandVal;
 begin result := evalCardNumHand(db, strToCardNums(hand))
 end;
 
 
-procedure writeRank(db:THandDb; hand:string);
+procedure writeRank(var db:THandDb; hand:string);
   var val : THandVal;
 begin
   val := evalHand(db, hand);
@@ -183,8 +183,7 @@ var
   dbFile : file of UInt32;
   nRead  : UInt32;
   rank   : Trank; suit:TSuit;
-  cnum   : TCardNum; v : THandVal;
-  str  : string;
+  cnum   : TCardNum;
 begin
   init_deck(gDeck);
   Assign(dbFile, 'HandRanks.dat'); Reset(dbFile);
